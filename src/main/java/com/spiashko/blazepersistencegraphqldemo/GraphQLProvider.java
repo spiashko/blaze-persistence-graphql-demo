@@ -8,14 +8,13 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import com.blazebit.persistence.view.Sorters;
 import com.google.common.io.Resources;
 import com.spiashko.blazepersistencegraphqldemo.repo.CatViewRepository;
-import com.spiashko.blazepersistencegraphqldemo.view.CatWithOwnerView;
+import com.spiashko.blazepersistencegraphqldemo.view.CatView;
 import graphql.GraphQL;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -68,7 +67,7 @@ public class GraphQLProvider {
                         .dataFetcher("findAll", new DataFetcher() {
                             @Override
                             public Object get(DataFetchingEnvironment dataFetchingEnvironment) {
-                                EntityViewSetting<CatWithOwnerView, ?> setting = graphQLEntityViewSupport.createPaginatedSetting(dataFetchingEnvironment);
+                                EntityViewSetting<CatView, ?> setting = graphQLEntityViewSupport.createPaginatedSetting(dataFetchingEnvironment);
                                 setting.addAttributeSorter("id", Sorters.ascending());
                                 if (setting.getMaxResults() == 0) {
                                     return new GraphQLRelayConnection<>(Collections.emptyList());
