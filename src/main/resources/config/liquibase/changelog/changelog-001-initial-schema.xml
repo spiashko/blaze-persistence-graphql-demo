@@ -35,19 +35,16 @@
         </rollback>
     </changeSet>
 
-
-
-    <changeSet author="siarhei.piashko" id="changelog-001-person">
+    <changeSet author="siarhei.piashko" id="changelog-003-person-provisioning">
         <sql>
-            create table person (
-            id SERIAL PRIMARY KEY,
-
-            name TEXT NOT NULL
-            );
+            INSERT INTO public.person (id, name) VALUES (1, 'bob');
         </sql>
-        <rollback>
-            drop table person;
-        </rollback>
+    </changeSet>
+
+    <changeSet author="siarhei.piashko" id="changelog-004-cat-provisioning">
+        <sql>
+            INSERT INTO public.cat (id, name, age, fk_owner, fk_mother, fk_father) VALUES (1, 'cat1', 5, 1, null, null)
+        </sql>
     </changeSet>
 
 </databaseChangeLog>
