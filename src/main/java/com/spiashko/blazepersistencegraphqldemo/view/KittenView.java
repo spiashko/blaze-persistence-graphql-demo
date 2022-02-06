@@ -6,13 +6,11 @@ import com.spiashko.blazepersistencegraphqldemo.model.Cat;
 
 
 @EntityView(Cat.class)
-public interface CatView {
+public interface KittenView {
 
     @IdMapping
     Long getId();
 
     String getName();
-
-    PersonView getOwner();
 
 }

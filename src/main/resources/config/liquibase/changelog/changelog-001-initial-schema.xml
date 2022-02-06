@@ -1,15 +1,18 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet author="siarhei.piashko" id="changelog-001-person">
         <sql>
-            create table person (
-            id SERIAL PRIMARY KEY,
+            create table person
+            (
+                id             SERIAL PRIMARY KEY,
 
-            name TEXT NOT NULL
+                name           TEXT NOT NULL,
+
+                fk_best_friend INTEGER REFERENCES person (id)
             );
         </sql>
         <rollback>
@@ -19,15 +22,16 @@
 
     <changeSet author="siarhei.piashko" id="changelog-001-cat">
         <sql>
-            create table cat (
-            id SERIAL PRIMARY KEY,
+            create table cat
+            (
+                id        SERIAL PRIMARY KEY,
 
-            name TEXT NOT NULL,
-            age INTEGER NOT NULL,
+                name      TEXT                           NOT NULL,
+                age       INTEGER                        NOT NULL,
 
-            fk_owner INTEGER REFERENCES person (id) NOT NULL,
-            fk_mother INTEGER REFERENCES cat (id),
-            fk_father INTEGER REFERENCES cat (id)
+                fk_owner  INTEGER REFERENCES person (id) NOT NULL,
+                fk_mother INTEGER REFERENCES cat (id),
+                fk_father INTEGER REFERENCES cat (id)
             );
         </sql>
         <rollback>
@@ -37,13 +41,18 @@
 
     <changeSet author="siarhei.piashko" id="changelog-003-person-provisioning">
         <sql>
-            INSERT INTO public.person (id, name) VALUES (1, 'bob');
+            INSERT INTO public.person (id, name)
+            VALUES (1, 'bob');
+
+            INSERT INTO public.person (id, name, fk_best_friend)
+            VALUES (2, 'alice', 1);
         </sql>
     </changeSet>
 
     <changeSet author="siarhei.piashko" id="changelog-004-cat-provisioning">
         <sql>
-            INSERT INTO public.cat (id, name, age, fk_owner, fk_mother, fk_father) VALUES (1, 'cat1', 5, 1, null, null)
+            INSERT INTO public.cat (id, name, age, fk_owner, fk_mother, fk_father)
+            VALUES (1, 'cat1', 5, 1, null, null)
         </sql>
     </changeSet>
 

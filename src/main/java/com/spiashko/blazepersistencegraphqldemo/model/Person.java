@@ -20,7 +20,14 @@ public class Person {
 
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_best_friend")
+    private Person bestFriend;
+
     @OneToMany(mappedBy = "owner")
     private Set<Cat> kittens = new HashSet<>();
+
+    @OneToMany(mappedBy = "bestFriend")
+    private Set<Person> bestFriendForPeople = new HashSet<>();
 
 }

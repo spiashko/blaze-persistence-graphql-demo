@@ -8,7 +8,9 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import com.blazebit.persistence.view.Sorters;
 import com.google.common.io.Resources;
 import com.spiashko.blazepersistencegraphqldemo.repo.CatViewRepository;
+import com.spiashko.blazepersistencegraphqldemo.repo.PersonViewRepository;
 import com.spiashko.blazepersistencegraphqldemo.view.CatView;
+import com.spiashko.blazepersistencegraphqldemo.view.PersonView;
 import graphql.GraphQL;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -30,7 +32,8 @@ import java.util.Collections;
 public class GraphQLProvider {
 
     private final EntityViewManager evm;
-    private final  CatViewRepository repository;
+    private final CatViewRepository catViewRepository;
+    private final PersonViewRepository personViewRepository;
 
     private GraphQLEntityViewSupport graphQLEntityViewSupport;
     private GraphQLSchema schema;
@@ -61,7 +64,7 @@ public class GraphQLProvider {
                         .dataFetcher("catById", new DataFetcher() {
                             @Override
                             public Object get(DataFetchingEnvironment dataFetchingEnvironment) {
-                                return repository.findById(graphQLEntityViewSupport.createSetting(dataFetchingEnvironment), Long.valueOf(dataFetchingEnvironment.getArgument("id")));
+                                return catViewRepository.findById(graphQLEntityViewSupport.createSetting(dataFetchingEnvironment), Long.valueOf(dataFetchingEnvironment.getArgument("id")));
                             }
                         })
                         .dataFetcher("findAll", new DataFetcher() {
@@ -72,7 +75,18 @@ public class GraphQLProvider {
                                 if (setting.getMaxResults() == 0) {
                                     return new GraphQLRelayConnection<>(Collections.emptyList());
                                 }
-                                return new GraphQLRelayConnection<>(repository.findAll(setting));
+                                return new GraphQLRelayConnection<>(catViewRepository.findAll(setting));
+                            }
+                        })
+                        .dataFetcher("personFindAll", new DataFetcher() {
+                            @Override
+                            public Object get(DataFetchingEnvironment dataFetchingEnvironment) {
+                                EntityViewSetting<PersonView, ?> setting = graphQLEntityViewSupport.createPaginatedSetting(dataFetchingEnvironment);
+                                setting.addAttributeSorter("id", Sorters.ascending());
+                                if (setting.getMaxResults() == 0) {
+                                    return new GraphQLRelayConnection<>(Collections.emptyList());
+                                }
+                                return new GraphQLRelayConnection<>(personViewRepository.findAll(setting));
                             }
                         })
                 )
